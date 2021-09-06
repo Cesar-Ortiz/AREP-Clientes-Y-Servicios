@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class HttpServer {
     public static final HttpServer _instance = new HttpServer();
+    private int port=35000;
 
     private static HttpServer getInstance(){
         return _instance;
@@ -71,7 +72,7 @@ public class HttpServer {
     }
 
     public String RequestResponseDisc() throws IOException{
-        File archivo = new File("src/main/resources/html_public/index.html");
+        File archivo = new File("src/main/resources/public/index.html");
         BufferedReader in = new BufferedReader(new FileReader(archivo));
         String str;
         String output = "HTTP/1.1 200 OK\r\nContent - Type: text/html\r\n\r\n";
@@ -100,6 +101,10 @@ public class HttpServer {
                 + "</body>"
                 + "</html>";
         return outputLine;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
