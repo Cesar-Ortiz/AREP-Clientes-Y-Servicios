@@ -154,7 +154,8 @@ public class HttpServer {
                 + "<title>Title of the document</title>\n"
                 + "</head>"
                 + "<body>"
-                + "My Web Site"
+                + "<h1>My Web Site</h1>"
+                + "<br>"
                 + "<img src=\"https://files.rcnradio.com/public/styles/image_834x569/public/2018-06/federacioncolombianadefutbol_0.jpg?itok=KhQ50TPY\"></img>"
                 + "</body>"
                 + "</html>";
