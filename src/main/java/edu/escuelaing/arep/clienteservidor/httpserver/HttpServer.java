@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 public class HttpServer {
     public static final HttpServer _instance = new HttpServer();
-    private String porth=System.getenv("PORT");;
     private HashMap<String, String> extencionList = new HashMap<String, String>();
 
     private static HttpServer getInstance(){
@@ -17,9 +16,7 @@ public class HttpServer {
     }
     private HttpServer(){}
 
-    public void start(String[] args) throws IOException, URISyntaxException {
-        String host = "0.0.0.0";
-        int port = Integer.parseInt(porth);
+    public void start(String[] args, int port) throws IOException, URISyntaxException {
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(port);
@@ -161,8 +158,5 @@ public class HttpServer {
         return outputLine;
     }
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        HttpServer.getInstance().start(args);
-    }
 }
 

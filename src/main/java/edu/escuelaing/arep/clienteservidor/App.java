@@ -4,6 +4,8 @@ import edu.escuelaing.arep.clienteservidor.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Hello world!
@@ -11,9 +13,12 @@ import java.net.URISyntaxException;
  */
 public class App 
 {
-    public static void main( String[] args ) throws IOException, URISyntaxException {
-        HttpServer._instance.setPort(getPort());
-        HttpServer._instance.start(args);
+    public static void main( String[] args ){
+        try {
+            HttpServer._instance.start(args, getPort());
+        } catch (IOException | URISyntaxException e) {
+            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
 
     static int getPort() {
