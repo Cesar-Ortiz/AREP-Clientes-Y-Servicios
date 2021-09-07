@@ -161,10 +161,6 @@ public class HttpServer {
         return outputLine;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public static void main(String[] args) throws IOException, URISyntaxException {
         HttpServer.getInstance().start(args);
     }
