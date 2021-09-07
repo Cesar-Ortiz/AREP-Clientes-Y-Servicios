@@ -1,12 +1,16 @@
 package edu.escuelaing.arep.clienteservidor.httpserver;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HttpServer {
     public static final HttpServer _instance = new HttpServer();
     private int port=35000;
+    private HashMap<String, String> extencionList = new HashMap<String, String>();
 
     private static HttpServer getInstance(){
         return _instance;
@@ -36,9 +40,21 @@ public class HttpServer {
         serverSocket.close();
     }
 
-    public void serveConnection(Socket clientSocket) throws IOException, URISyntaxException {
+    public void fullExtens(){
+        extencionList.put("js", "text");
+        extencionList.put("html", "text");
+        extencionList.put("css", "text");
+        extencionList.put("gif", "image");
+        extencionList.put("jpeg", "image");
+        extencionList.put("jpg", "image");
+        extencionList.put("png", "image");
+    }
 
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+    public void serveConnection(Socket clientSocket) throws IOException, URISyntaxException {
+        fullExtens();
+        OutputStream outputStream;
+        outputStream = clientSocket.getOutputStream();
+        PrintWriter out = new PrintWriter(outputStream, true);
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                         clientSocket.getInputStream()));
@@ -53,29 +69,64 @@ public class HttpServer {
             }
         }
 
-        String uriStr= request.get(0).split(" ")[1];
-        URI resourceURI = new URI(uriStr);
+        try{
 
-        outputLine = getResource(resourceURI);
-        out.println(outputLine);
+            String uriStr= request.get(0).split(" ")[1];
+            System.out.println("uriStr: "+uriStr);
+            URI resourceURI = new URI(uriStr);
+            if(extencionList.get(typeExt(resourceURI.getPath())).equals("image")){
+                getImageResource(resourceURI.getPath(), outputStream);
+            }
+            else if(extencionList.get(typeExt(resourceURI.getPath())).equals("text")){
+                outputLine = getResource(resourceURI);
+                out.println(outputLine);
+            }
 
-        out.close();
-        in.close();
-        clientSocket.close();
+            out.close();
+            in.close();
+            clientSocket.close();
+        }
+        catch (NullPointerException e){
+
+        }
     }
 
     public String getResource(URI resourceURI) throws IOException {
         System.out.println("Received URI path: "+resourceURI.getPath());
         System.out.println("Received URI query: "+resourceURI.getQuery());
-        //return computeDefaultResponse();
-        return RequestResponseDisc();
+        return getTextResource(resourceURI.getPath());
     }
 
-    public String RequestResponseDisc() throws IOException{
-        File archivo = new File("src/main/resources/public/index.html");
+    private void getImageResource(String exten, OutputStream outputStream) throws IOException {
+        String path = "src/main/resources/public"+ exten;
+        File file = new File(path);
+
+        if (file.exists()) {
+            try {
+                BufferedImage image = ImageIO.read(file);
+                if (image != null) {
+                    DataOutputStream imgWrite = new DataOutputStream(outputStream);
+                    ByteArrayOutputStream streamoutput = new ByteArrayOutputStream();
+                    String ext=typeExt(exten);
+                    ImageIO.write(image, ext, streamoutput);
+                    imgWrite.writeBytes("HTTP/1.1 200 OK \r\n" + "Content-Type: " + "image/"+ ext + "\r\n" + "\r\n");
+                    imgWrite.write(streamoutput.toByteArray());
+                }
+            } catch (IOException e) {
+                System.err.format("IOException: %s%n", e);
+                throw new IOException("DataOutputStream it cant be empty!");
+            }
+        } else {
+            throw new IOException("File no exist!");
+        }
+    }
+
+    public String getTextResource(String extent) throws IOException{
+        File archivo = new File("src/main/resources/public"+extent);
         BufferedReader in = new BufferedReader(new FileReader(archivo));
+        String ext = typeExt(extent);
         String str;
-        String output = "HTTP/1.1 200 OK\r\nContent - Type: text/html\r\n\r\n";
+        String output = "HTTP/1.1 200 OK\r\nContent - Type: text/"+ ext +"\r\n\r\n";
         while((str = in.readLine())!= null){
             System.out.println(str);
             output+=str+"\n";
@@ -83,6 +134,11 @@ public class HttpServer {
         System.out.println(output);
 
         return output;
+    }
+
+    public String typeExt(String path){
+        String[] ext = path.split("\\.");
+        return ext[1];
     }
 
     public String computeDefaultResponse(){
