@@ -72,22 +72,24 @@ public class HttpServer {
 
             String uriStr= request.get(0).split(" ")[1];
             System.out.println("uriStr: "+uriStr);
-            URI resourceURI = new URI(uriStr);
-            if(extencionList.get(typeExt(resourceURI.getPath())).equals("image")){
-                getImageResource(resourceURI.getPath(), outputStream);
-            }
-            else if(extencionList.get(typeExt(resourceURI.getPath())).equals("text")){
-                outputLine = getResource(resourceURI);
-                out.println(outputLine);
-            }
 
-            out.close();
-            in.close();
-            clientSocket.close();
+                URI resourceURI = new URI(uriStr);
+                if(extencionList.get(typeExt(resourceURI.getPath())).equals("image")){
+                    getImageResource(resourceURI.getPath(), outputStream);
+                }
+                else if(extencionList.get(typeExt(resourceURI.getPath())).equals("text")){
+                    outputLine = getResource(resourceURI);
+                    out.println(outputLine);
+                }
+
+
         }
-        catch (NullPointerException e){
-            computeDefaultResponse();
+        catch (Exception e){
+            out.println(computeDefaultResponse());
         }
+        out.close();
+        in.close();
+        clientSocket.close();
     }
 
     public String getResource(URI resourceURI) throws IOException {
@@ -121,6 +123,7 @@ public class HttpServer {
     }
 
     public String getTextResource(String extent) throws IOException{
+        System.out.println("extención: "+extent);
         File archivo = new File("src/main/resources/public"+extent);
         BufferedReader in = new BufferedReader(new FileReader(archivo));
         String ext = typeExt(extent);
