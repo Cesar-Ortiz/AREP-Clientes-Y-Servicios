@@ -1,3 +1,3 @@
-function mostrar(){
-    window.alert('me presionaste');
+function mostrar(entrada){
+    window.alert('me presionaste:'+ entrada);
 }

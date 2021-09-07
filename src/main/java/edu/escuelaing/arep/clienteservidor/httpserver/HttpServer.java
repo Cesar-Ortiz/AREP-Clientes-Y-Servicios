@@ -86,7 +86,7 @@ public class HttpServer {
             clientSocket.close();
         }
         catch (NullPointerException e){
-
+            computeDefaultResponse();
         }
     }
 
