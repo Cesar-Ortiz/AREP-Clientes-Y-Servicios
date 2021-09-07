@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class HttpServer {
     public static final HttpServer _instance = new HttpServer();
-    private int port=35000;
+    private String porth=System.getenv("PORT");;
     private HashMap<String, String> extencionList = new HashMap<String, String>();
 
     private static HttpServer getInstance(){
@@ -18,9 +18,11 @@ public class HttpServer {
     private HttpServer(){}
 
     public void start(String[] args) throws IOException, URISyntaxException {
+        String host = "0.0.0.0";
+        int port = Integer.parseInt(porth);
         ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(35000);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             System.err.println("Could not listen on port: 35000.");
             System.exit(1);
