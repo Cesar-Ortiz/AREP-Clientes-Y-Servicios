@@ -1,5 +1,6 @@
 .button{
     background-color: green;
-    width: 100px;
-    height: 60px;
+    width: 70px;
+    height: 40px;
+    border-radius: 12px;
 }
