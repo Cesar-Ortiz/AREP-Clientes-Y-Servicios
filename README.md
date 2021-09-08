@@ -7,7 +7,7 @@ Se realizo un servidor web que lee archivos e imagenes del disco entre los cuale
 #### 🚀 Despliegue Base(html) [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://clientwebservices.herokuapp.com)
 
 ## Descripción de Arquitectura
-- Aqui podra ver la descripción de la arquitectura :
+- Aqui podra ver la descripción de la arquitectura : https://github.com/Cesar-Ortiz/AREP-Clientes-Y-Servicios/blob/master/Documento/Descripci%C3%B3n_de_la_arquitectura.pdf
 
 ## Autor
 - César Fernando Ortiz Rocha
